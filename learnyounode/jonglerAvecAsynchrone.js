@@ -3,21 +3,20 @@ const http = require('http');
 const [node, path, ...urls] = process.argv;
 const result = {};
 
-urls.forEach((url) => {
+urls.forEach(url => {
+  const chunks = [];
 
-  let strResult = "";
-
-  http.get(url , (res) => {
+  http.get(url , res => {
     res.setEncoding('utf8');
 
-    res.on('data', (data) => {
-      strResult += data;
-    });
+    res.on('data', chunks.push);
 
     res.on('end', () =>{
-      result[url] = strResult;
-      if(Object.values(result).length === urls.length){
-        Object.values(result).forEach(line => console.log(line));
+      result[url] = chunks.join('');
+      const values = Object.values(result)
+      
+      if(values.length === urls.length){
+        values.forEach(line => console.log(line));
       }
     });
   });
